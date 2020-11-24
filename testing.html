@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TENNIS!</title>
+	<style>
+		body {
+		  display: flex;
+		  background: #335AAE;
+		  position: relative;
+		}
+
+		.paddle {
+			height: 100px;
+			width: 25px;
+			background: orange;
+		}
+
+		#net {
+			height: 735px;
+			width: 40px;
+			background: #222;
+			margin: 0 auto;
+		}
+
+		#ball {
+			width: 25px;
+			height: 25px;
+			background: #F3F72D;
+			border-radius: 50%;
+            position: absolute;
+            margin-left: 15px;
+		}
+	</style>
+</head>
+<body>
+  
+   	 <div id="left" class="paddle"></div>
+   	 <div id="net"></div>
+   	 <div id="ball"></div>
+   	 <div id="right" class="paddle"></div>
+   
+</body>
+
+
+ <script>
+ 	let left = document.getElementById("left");
+ 	let right = document.getElementById("right");
+ 	let ball = document.getElementById("ball");
+ 	
+ 	
+
+ 	/* ALLOWS THE PLAYER TO MOVE THEIR RACKET */
+ 	let movement = 0;
+ 	function move(e){
+    //if the down arrow is pressed add 10 to movement and set it as the value for marginTop
+ 		if(e.key == "ArrowDown" && movement < 640){
+ 		   movement += 10;
+ 		   left.style.marginTop = `${movement}px`;	
+ 		 } else if(e.key == "ArrowUp" && movement > 0){
+ 		   movement -= 10;
+ 	       left.style.marginTop = `${movement}px`;
+ 	     }
+ 	}
+
+
+    /* MOVES THE RIVAL PLAYERS RACKET AUTOMATICALLY */
+    let autoMove = 0;
+ 	let Ydirection = "down";
+ 	function auto(e){
+ 	  //SET THE DIRECTION OF MOVEMENT DEPENDING ON IF THE TOP OR BOTTOM OF THE PAGE HAS BEEN REACHED
+ 	  if(autoMove == 640){ Ydirection = "up"};
+ 	  if(autoMove == 0){Ydirection = "down"};
+
+      if(Ydirection == "down"){
+       autoMove += 10;	
+       right.style.marginTop = `${autoMove}px`;
+      } else if(Ydirection == "up"){
+       autoMove -= 10;
+       right.style.marginTop = `${autoMove}px`;
+      }
+     }
+
+
+     /* MOVES THE BALL ACROSS THE SCREEN */
+     let ballMove = 15;
+     let xDirection = "right";
+     function ballPosition(e){
+       if(ballMove == 15){ xDirection = "right"};
+       if(ballMove == 1515){ xDirection = "left"};
+
+       if(xDirection == "right"){
+       	ballMove += 10;
+       	ball.style.left = `${ballMove}px`;
+       } else if(xDirection == "left"){
+       	ballMove -= 10;
+       	ball.style.left = `${ballMove}px`;
+       }
+     }
+
+    setInterval(auto, 40);
+    setInterval(ballPosition, 40);
+ 	document.addEventListener("keydown",move);
+
+  </script>
+</html>

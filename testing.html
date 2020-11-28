@@ -7,13 +7,18 @@
 		  display: flex;
 		  background: #335AAE;
 		  position: relative;
+      font-family: century gothic;
+      color: #222;
 		}
 
 		.paddle {
 			height: 100px;
 			width: 25px;
 			background: orange;
+      margin-top: 310px;
 		}
+
+
 
 		#net {
 			height: 735px;
@@ -27,9 +32,27 @@
 			height: 25px;
 			background: #F3F72D;
 			border-radius: 50%;
-            position: absolute;
-            margin-left: 15px;
+      position: absolute;
+      left: 15px;
+      top: 350px;
 		}
+
+    #score {
+      width: 300px;
+      height: 150px;
+      position: absolute;
+      left: 637px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      
+    }
+
+    #score div {
+      display: inline-block;
+      text-align: center;
+      font-size: 2.5em;
+      padding-top: 40px;
+    }
 	</style>
 </head>
 <body>
@@ -37,6 +60,10 @@
    	 <div id="left" class="paddle"></div>
    	 <div id="net"></div>
    	 <div id="ball"></div>
+     <div id="score">
+       <div id="player">0</div>
+       <div id="rival">0</div>
+     </div>
    	 <div id="right" class="paddle"></div>
    
 </body>
@@ -46,11 +73,14 @@
  	let left = document.getElementById("left");
  	let right = document.getElementById("right");
  	let ball = document.getElementById("ball");
- 	
+ 	let player = document.getElementById("player");
+  let rival = document.getElementById("rival");
+  let playerScore = 0;
+  let rivalScore = 0;
  	
 
  	/* ALLOWS THE PLAYER TO MOVE THEIR RACKET */
- 	let movement = 0;
+ 	let movement = 310;
  	function move(e){
     //if the down arrow is pressed add 10 to movement and set it as the value for marginTop
  		if(e.key == "ArrowDown" && movement < 640){
@@ -60,33 +90,49 @@
  		   movement -= 10;
  	       left.style.marginTop = `${movement}px`;
  	     }
- 	}
+  }
 
 
     /* MOVES THE RIVAL PLAYERS RACKET AUTOMATICALLY */
-    let autoMove = 0;
+  let autoMove = 640;
  	let Ydirection = "down";
+  let moveAmount = 0;
+  let rivalTop = "";
+
  	function auto(e){
  	  //SET THE DIRECTION OF MOVEMENT DEPENDING ON IF THE TOP OR BOTTOM OF THE PAGE HAS BEEN REACHED
- 	  if(autoMove == 640){ Ydirection = "up"};
- 	  if(autoMove == 0){Ydirection = "down"};
+    moveAmount = Math.floor(Math.random() * 10);
+    
+ 	  if(autoMove > 630){ Ydirection = "up"};
+ 	  if(autoMove < 10){Ydirection = "down"};
 
-      if(Ydirection == "down"){
-       autoMove += 10;	
+    if(Ydirection == "down"){
+       autoMove += moveAmount;
        right.style.marginTop = `${autoMove}px`;
-      } else if(Ydirection == "up"){
-       autoMove -= 10;
+    } else if(Ydirection == "up"){
+       autoMove -= moveAmount;
        right.style.marginTop = `${autoMove}px`;
       }
-     }
+      rivalTop = window.getComputedStyle(right).marginTop;
+  }
 
 
      /* MOVES THE BALL ACROSS THE SCREEN */
      let ballMove = 15;
      let xDirection = "right";
+     let diffAmount = 0;
+     let ballTop = "";
+     let distanceBetween = 0;
+
+     function difference(a,b){
+      return Math.abs(a - b);
+     }
+
      function ballPosition(e){
        if(ballMove == 15){ xDirection = "right"};
        if(ballMove == 1515){ xDirection = "left"};
+
+       ballTop = window.getComputedStyle(ball).top;
 
        if(xDirection == "right"){
        	ballMove += 10;
@@ -95,10 +141,28 @@
        	ballMove -= 10;
        	ball.style.left = `${ballMove}px`;
        }
+
+       if(ballMove == 1515){
+        distanceBetween = difference(parseInt(ballTop),parseInt(rivalTop));
+       if(distanceBetween > 75){
+         playerScore += 1;
+         player.innerHTML = `${playerScore}`;
+         ballMove = 15;
+         // clearInterval(ballMovement); 
+        }
+        
+       }
      }
 
-    setInterval(auto, 40);
-    setInterval(ballPosition, 40);
+     function playerHit(e){
+      
+     }
+
+    
+
+    setInterval(playerHit, 40);
+    setInterval(auto, 15);
+    const ballMovement = setInterval(ballPosition, 40);
  	document.addEventListener("keydown",move);
 
   </script>

@@ -99,7 +99,7 @@
   let moveAmount = 0;
   let rivalTop = "";
 
- 	function auto(e){
+ 	function rivalMovement(e){
  	  //SET THE DIRECTION OF MOVEMENT DEPENDING ON IF THE TOP OR BOTTOM OF THE PAGE HAS BEEN REACHED
     moveAmount = Math.floor(Math.random() * 10);
     
@@ -117,53 +117,59 @@
   }
 
 
-     /* MOVES THE BALL ACROSS THE SCREEN */
-     let ballMove = 15;
-     let xDirection = "right";
-     let diffAmount = 0;
-     let ballTop = "";
-     let distanceBetween = 0;
+  let ballTop = parseInt(window.getComputedStyle(ball).top);
+  let ballAcross = parseInt(window.getComputedStyle(ball).left);
+  let yDirection = "up";
+  let xDirection = "right";
+  
+  function ballMovement(){
+   
+   switch(xDirection){
+     case "right":
+     ballAcross += 10;
+     ball.style.left = `${ballAcross}px`;
+     break;
+     case "left":
+     ballAcross -= 10;
+     ball.style.left = `${ballAcross}px`;
+     break;
+   }
 
-     function difference(a,b){
-      return Math.abs(a - b);
-     }
+   if(xDirection == "right" && ballAcross == 1515){
+    xDirection = "left";
+   } else if(xDirection == "left" && ballAcross == 15){
+    xDirection = "right";
+   }
 
-     function ballPosition(e){
-       if(ballMove == 15){ xDirection = "right"};
-       if(ballMove == 1515){ xDirection = "left"};
+  
+  switch(yDirection){
+     case "up":
+     ballTop -= 5;
+     ball.style.top = `${ballTop}px`;
+     break;
+     case "down":
+     ballTop += 5;
+     ball.style.top = `${ballTop}px`;
+     break;
+   }
 
-       ballTop = window.getComputedStyle(ball).top;
+   if(yDirection == "up" && ballTop == 10){
+    yDirection = "down";
+   } else if(yDirection == "down" && ballTop == 700){
+    yDirection = "up";
+   }
 
-       if(xDirection == "right"){
-       	ballMove += 10;
-       	ball.style.left = `${ballMove}px`;
-       } else if(xDirection == "left"){
-       	ballMove -= 10;
-       	ball.style.left = `${ballMove}px`;
-       }
 
-       if(ballMove == 1515){
-        distanceBetween = difference(parseInt(ballTop),parseInt(rivalTop));
-       if(distanceBetween > 75){
-         playerScore += 1;
-         player.innerHTML = `${playerScore}`;
-         ballMove = 15;
-         // clearInterval(ballMovement); 
-        }
-        
-       }
-     }
+  }
 
-     function playerHit(e){
-      
-     }
 
+   setInterval(ballMovement,40);
     
 
-    setInterval(playerHit, 40);
-    setInterval(auto, 15);
-    const ballMovement = setInterval(ballPosition, 40);
- 	document.addEventListener("keydown",move);
+    // setInterval(playerHit, 40);
+    setInterval(rivalMovement, 15);
+    // const ballMovement = setInterval(xBallPosition, 40);
+ 	  document.addEventListener("keydown",move);
 
   </script>
 </html>

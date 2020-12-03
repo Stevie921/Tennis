@@ -123,7 +123,8 @@
   let xDirection = "right";
   
   function ballMovement(){
-   
+  
+  //CONTROLS THE HORIZONTAL MOVEMENT OF THE BALL
    switch(xDirection){
      case "right":
      ballAcross += 10;
@@ -142,6 +143,7 @@
    }
 
   
+  //CONTROLS THE VERTICAL MOVEMENT OF THE BALL
   switch(yDirection){
      case "up":
      ballTop -= 5;
@@ -153,23 +155,51 @@
      break;
    }
 
+
    if(yDirection == "up" && ballTop == 10){
     yDirection = "down";
    } else if(yDirection == "down" && ballTop == 700){
     yDirection = "up";
    }
 
+   
+   //DETECT IF THE BALL HITS ONE OF THE RACKETS
+   let playerPos = left.getBoundingClientRect();
+   let rivalPos  = right.getBoundingClientRect();
+   let ballPos = ball.getBoundingClientRect();
 
+   function difference(a,b){
+     return Math.abs(a - b);
+   }
+
+    
+    if(ballPos.left == 1523){
+      if(difference((ballPos.top + ballPos.height / 2),(rivalPos.top + rivalPos.height / 2)) > 76){
+        playerScore += 1;
+        player.innerHTML = `${playerScore}`;
+        clearInterval(ballInterval);
+        setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
+      }
+    } else if(ballPos.left == 23){
+      if(difference((ballPos.top + ballPos.height / 2),(playerPos.top + playerPos.height / 2)) > 76){
+        rivalScore += 1;
+        rival.innerHTML = `${rivalScore}`;
+        clearInterval(ballInterval);
+        setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
+      }
+    }
+   
+
+  
   }
 
-
-   setInterval(ballMovement,40);
+   // ballMovement();
+    let ballInterval = setInterval(ballMovement,40);
     
 
-    // setInterval(playerHit, 40);
+  
     setInterval(rivalMovement, 15);
-    // const ballMovement = setInterval(xBallPosition, 40);
- 	  document.addEventListener("keydown",move);
+    document.addEventListener("keydown",move);
 
   </script>
 </html>

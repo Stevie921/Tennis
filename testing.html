@@ -178,6 +178,9 @@
         playerScore += 1;
         player.innerHTML = `${playerScore}`;
         clearInterval(ballInterval);
+        ballAcross = 15;
+        ballTop = 350;
+        xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
       }
     } else if(ballPos.left == 23){
@@ -185,6 +188,9 @@
         rivalScore += 1;
         rival.innerHTML = `${rivalScore}`;
         clearInterval(ballInterval);
+        ballAcross = 15;
+        ballTop = 350;
+        xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
       }
     }
@@ -193,12 +199,9 @@
   
   }
 
-   // ballMovement();
+ 
     let ballInterval = setInterval(ballMovement,40);
-    
-
-  
-    setInterval(rivalMovement, 15);
+    setInterval(rivalMovement, 10);
     document.addEventListener("keydown",move);
 
   </script>

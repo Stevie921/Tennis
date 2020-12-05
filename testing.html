@@ -95,7 +95,7 @@
 
     /* MOVES THE RIVAL PLAYERS RACKET AUTOMATICALLY */
   let autoMove = 640;
- 	let Ydirection = "down";
+ 	let rivalDirection = "down";
   let moveAmount = 0;
   let rivalTop = "";
 
@@ -103,13 +103,10 @@
  	  //SET THE DIRECTION OF MOVEMENT DEPENDING ON IF THE TOP OR BOTTOM OF THE PAGE HAS BEEN REACHED
     moveAmount = Math.floor(Math.random() * 10);
     
- 	  if(autoMove > 630){ Ydirection = "up"};
- 	  if(autoMove < 10){Ydirection = "down"};
-
-    if(Ydirection == "down"){
+    if(yDirection == "down" && autoMove < 630){
        autoMove += moveAmount;
        right.style.marginTop = `${autoMove}px`;
-    } else if(Ydirection == "up"){
+    } else if(yDirection == "up" && autoMove > 10){
        autoMove -= moveAmount;
        right.style.marginTop = `${autoMove}px`;
       }
@@ -167,6 +164,8 @@
    let playerPos = left.getBoundingClientRect();
    let rivalPos  = right.getBoundingClientRect();
    let ballPos = ball.getBoundingClientRect();
+   let distanceRival = 0;
+   let distancePlayer = 0;
 
    function difference(a,b){
      return Math.abs(a - b);
@@ -174,7 +173,8 @@
 
     
     if(ballPos.left == 1523){
-      if(difference((ballPos.top + ballPos.height / 2),(rivalPos.top + rivalPos.height / 2)) > 76){
+      distanceRival = difference((ballPos.top + ballPos.height / 2),(rivalPos.top + rivalPos.height / 2));
+      if(distanceRival > 76){
         playerScore += 1;
         player.innerHTML = `${playerScore}`;
         clearInterval(ballInterval);
@@ -182,9 +182,12 @@
         ballTop = 350;
         xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
+      } else {
+        distanceRival >= 37 ? yDirection = "up" : yDirection = "down";
       }
     } else if(ballPos.left == 23){
-      if(difference((ballPos.top + ballPos.height / 2),(playerPos.top + playerPos.height / 2)) > 76){
+      distancePlayer = difference((ballPos.top + ballPos.height / 2),(playerPos.top + playerPos.height / 2));
+     if(distancePlayer > 76){
         rivalScore += 1;
         rival.innerHTML = `${rivalScore}`;
         clearInterval(ballInterval);
@@ -192,6 +195,8 @@
         ballTop = 350;
         xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
+      } else {
+        distancePlayer >= 37 ? yDirection = "up" : yDirection = "down";
       }
     }
    
@@ -200,8 +205,8 @@
   }
 
  
-    let ballInterval = setInterval(ballMovement,40);
-    setInterval(rivalMovement, 10);
+    let ballInterval = setInterval(ballMovement,35);
+    setInterval(rivalMovement, 8);
     document.addEventListener("keydown",move);
 
   </script>

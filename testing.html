@@ -101,15 +101,19 @@
 
  	function rivalMovement(e){
  	  //SET THE DIRECTION OF MOVEMENT DEPENDING ON IF THE TOP OR BOTTOM OF THE PAGE HAS BEEN REACHED
-    moveAmount = Math.floor(Math.random() * 10);
+    moveAmount = Math.floor(Math.random() * 8);
     
     if(yDirection == "down" && autoMove < 630){
+      if(ballTop > autoMove){
        autoMove += moveAmount;
-       right.style.marginTop = `${autoMove}px`;
-    } else if(yDirection == "up" && autoMove > 10){
-       autoMove -= moveAmount;
-       right.style.marginTop = `${autoMove}px`;
+       right.style.marginTop = `${autoMove}px`; 
       }
+    } else if(yDirection == "up" && autoMove > 10){
+      if(ballTop < autoMove){
+       autoMove -= moveAmount;
+       right.style.marginTop = `${autoMove}px`; 
+      }
+    }
       rivalTop = window.getComputedStyle(right).marginTop;
   }
 
@@ -181,7 +185,7 @@
         ballAcross = 15;
         ballTop = 350;
         xDirection = "right";
-        setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
+        setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
       } else {
         distanceRival >= 37 ? yDirection = "up" : yDirection = "down";
       }
@@ -194,19 +198,16 @@
         ballAcross = 15;
         ballTop = 350;
         xDirection = "right";
-        setTimeout(function(){ ballInterval = setInterval(ballMovement,40) }, 500);
+        setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
       } else {
         distancePlayer >= 37 ? yDirection = "up" : yDirection = "down";
       }
     }
-   
-
-  
-  }
+   }
 
  
-    let ballInterval = setInterval(ballMovement,35);
-    setInterval(rivalMovement, 8);
+    let ballInterval = setInterval(ballMovement,25);
+    setInterval(rivalMovement,23);
     document.addEventListener("keydown",move);
 
   </script>

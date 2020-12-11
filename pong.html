@@ -18,9 +18,8 @@
       margin-top: 310px;
 		}
 
-
-
-		#net {
+  
+    #net {
 			height: 735px;
 			width: 40px;
 			background: #222;
@@ -64,6 +63,22 @@
       letter-spacing: 10px;
       word-spacing: 25px;
     }
+
+    button {
+      position: absolute;
+      width: 200px;
+      height: 35px;
+      border: none;
+      margin-left: 688px;
+      margin-top: 425px;
+      display: none;
+    }
+
+    #line {
+      width: 100%;
+      height: 5px;
+      background: #222;
+    }
 	</style>
 </head>
 <body>
@@ -77,7 +92,7 @@
      </div>
    	 <div id="right" class="paddle"></div>
      <p id="win"></p>
-   
+     <button>Replay</button>
 </body>
 
 
@@ -88,6 +103,7 @@
  	let player = document.getElementById("player");
   let rival = document.getElementById("rival");
   let win = document.getElementById("win");
+  let btn = document.querySelector("button");
   let playerScore = 0;
   let rivalScore = 0;
   let winMessage = "";
@@ -159,7 +175,7 @@
      break;
    }
 
-   if(xDirection == "right" && ballAcross == 1515){
+   if(xDirection == "right" && ballAcross >= 1525){
     xDirection = "left";
    } else if(xDirection == "left" && ballAcross == 15){
     xDirection = "right";
@@ -196,11 +212,8 @@
    function difference(a,b){
      return Math.abs(a - b);
    }
-
-    
-    if(ballPos.left == 1523){
-      distanceRival = difference((ballPos.top + ballPos.height / 2),(rivalPos.top + rivalPos.height / 2));
-      if(distanceRival > 76){
+    if(ballPos.left > 1525){
+      if(ballPos.bottom < rivalPos.top || ballPos.top > rivalPos.bottom){
         playerScore += 1;
         player.innerHTML = `${playerScore}`;
         clearInterval(ballInterval);
@@ -208,12 +221,10 @@
         ballTop = 350;
         xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
-      } else {
-        distanceRival >= 37 ? yDirection = "up" : yDirection = "down";
-      }
-    } else if(ballPos.left == 23){
-      distancePlayer = difference((ballPos.top + ballPos.height / 2),(playerPos.top + playerPos.height / 2));
-     if(distancePlayer > 76){
+      } 
+    }
+    else if(ballPos.left == 23){
+      if(ballPos.bottom < playerPos.top || ballPos.top > playerPos.bottom){
         rivalScore += 1;
         rival.innerHTML = `${rivalScore}`;
         clearInterval(ballInterval);
@@ -221,9 +232,7 @@
         ballTop = 350;
         xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
-      } else {
-        distancePlayer >= 37 ? yDirection = "up" : yDirection = "down";
-      }
+      } 
     }
 
     if(playerScore == 11){
@@ -231,18 +240,26 @@
       winMessage = "You Won!";
       win.innerHTML = `${winMessage}`;
       win.style.display = "block";
+      btn.style.display = "block";
     } else if(rivalScore == 11){
       winner();
       winMessage = "You lost!";
       win.innerHTML = `${winMessage}`;
       win.style.display = "block";
+      btn.style.display = "block";
     }
+   }
+
+   function replay(){
+    location.reload();
    }
 
  
     let ballInterval = setInterval(ballMovement,25);
     setInterval(rivalMovement,23);
+    btn.addEventListener("click",replay);
     document.addEventListener("keydown",move);
+
 
   </script>
 </html>

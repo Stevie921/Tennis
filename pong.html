@@ -209,9 +209,7 @@
    let distanceRival = 0;
    let distancePlayer = 0;
 
-   function difference(a,b){
-     return Math.abs(a - b);
-   }
+ 
     if(ballPos.left > 1525){
       if(ballPos.bottom < rivalPos.top || ballPos.top > rivalPos.bottom){
         playerScore += 1;
@@ -222,6 +220,7 @@
         xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
       } 
+      ballPos.bottom > ((rivalPos.bottom - 50)) ? yDirection = "down" : yDirection = "up";
     }
     else if(ballPos.left == 23){
       if(ballPos.bottom < playerPos.top || ballPos.top > playerPos.bottom){
@@ -233,7 +232,8 @@
         xDirection = "right";
         setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
       } 
-    }
+      ballPos.bottom > ((playerPos.bottom - 50)) ? yDirection = "down" : yDirection = "up";
+     }
 
     if(playerScore == 11){
       winner();
@@ -254,9 +254,8 @@
     location.reload();
    }
 
- 
     let ballInterval = setInterval(ballMovement,25);
-    setInterval(rivalMovement,23);
+    setInterval(rivalMovement,21);
     btn.addEventListener("click",replay);
     document.addEventListener("keydown",move);
 

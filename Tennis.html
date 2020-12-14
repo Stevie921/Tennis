@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TENNIS!</title>
+	<style>
+		body {
+		  display: flex;
+		  background: repeating-linear-gradient( 180deg,
+  #6FB532,
+  #6FB532 40px,
+  #649E12 40px,
+  #649E12 80px);
+		  position: relative;
+      font-family: century gothic;
+      color: #222;
+		}
+
+		.paddle {
+			height: 100px;
+			width: 25px;
+			background: #111;
+      margin-top: 310px;
+      outline: 2px solid #fff;
+		}
+
+    #net {
+			height: 735px;
+			width: 40px;
+			background: #fff;
+			margin: 0 auto;
+		}
+
+		#ball {
+			width: 25px;
+			height: 25px;
+			background: #F3F72D;
+			border-radius: 50%;
+      position: absolute;
+      left: 15px;
+      top: 350px;
+		}
+
+    #score {
+      width: 300px;
+      height: 150px;
+      position: absolute;
+      left: 637px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      
+    }
+
+    #score div {
+      display: inline-block;
+      text-align: center;
+      font-size: 2.5em;
+      padding-top: 40px;
+    }
+
+    #win {
+      position: absolute;
+      font-size: 5em;
+      margin-left: 585px;
+      margin-top: 285px;
+      z-index: 0;
+      color: #fff;
+      letter-spacing: 10px;
+      word-spacing: 25px;
+    }
+
+    button {
+      position: absolute;
+      width: 200px;
+      height: 35px;
+      border: none;
+      margin-left: 688px;
+      margin-top: 425px;
+      display: none;
+      background: #111;
+      color: #fff;
+    }
+
+    #line {
+      width: 100%;
+      height: 5px;
+      background: #222;
+    }
+	</style>
+</head>
+<body>
+  
+   	 <div id="left" class="paddle"></div>
+   	 <div id="net"></div>
+   	 <div id="ball"></div>
+     <div id="score">
+       <div id="player">0</div>
+       <div id="rival">0</div>
+     </div>
+   	 <div id="right" class="paddle"></div>
+     <p id="win"></p>
+     <button>Replay</button>
+
+
+  <audio id="point" src="sounds/point.wav"></audio>
+  <audio id="hit" src="sounds/hit.wav"></audio>
+  <audio id="crowd" src="sounds/crowd.wav"></audio>
+  <audio id="lose" src="sounds/lose.wav"></audio>
+  <audio id="winaudio" src="sounds/win.wav"></audio>
+
+</body>
+
+
+ <script>
+ 	let left = document.getElementById("left");
+ 	let right = document.getElementById("right");
+ 	let ball = document.getElementById("ball");
+ 	let player = document.getElementById("player");
+  let rival = document.getElementById("rival");
+  let win = document.getElementById("win");
+  let btn = document.querySelector("button");
+  let pointAudio = document.getElementById("point");
+  let hitAudio = document.getElementById("hit");
+  let crowdAudio = document.getElementById("crowd");
+  let loseAudio = document.getElementById("lose");
+  let winAudio = document.getElementById("winaudio");
+  let playerScore = 0;
+  let rivalScore = 0;
+  let winMessage = "";
+
+
+ 	/* ALLOWS THE PLAYER TO MOVE THEIR RACKET */
+ 	let movement = 310;
+ 	function move(e){
+    //if the down arrow is pressed add 10 to movement and set it as the value for marginTop
+ 		if(e.key == "ArrowDown" && movement < 640){
+ 		   movement += 10;
+ 		   left.style.marginTop = `${movement}px`;	
+ 		 } else if(e.key == "ArrowUp" && movement > 0){
+ 		   movement -= 10;
+ 	       left.style.marginTop = `${movement}px`;
+ 	     }
+  }
+
+
+    /* MOVES THE RIVAL PLAYERS RACKET AUTOMATICALLY */
+  let autoMove = 640;
+ 	let rivalDirection = "down";
+  let moveAmount = 0;
+  let rivalTop = "";
+
+ 	function rivalMovement(e){
+ 	  //SET THE DIRECTION OF MOVEMENT DEPENDING ON IF THE TOP OR BOTTOM OF THE PAGE HAS BEEN REACHED
+    moveAmount = Math.floor(Math.random() * 8);
+    
+    if(yDirection == "down" && autoMove < 630){
+      if(ballTop > autoMove){
+       autoMove += moveAmount;
+       right.style.marginTop = `${autoMove}px`; 
+      }
+    } else if(yDirection == "up" && autoMove > 10){
+      if(ballTop < autoMove){
+       autoMove -= moveAmount;
+       right.style.marginTop = `${autoMove}px`; 
+      }
+    }
+      rivalTop = window.getComputedStyle(right).marginTop;
+  }
+
+
+  //IF MAX SCORE IS REACHED
+  function winner(){
+    clearInterval(ballInterval);
+    clearInterval(rivalMovement);
+
+  }
+
+
+  let ballTop = parseInt(window.getComputedStyle(ball).top);
+  let ballAcross = parseInt(window.getComputedStyle(ball).left);
+  let yDirection = "up";
+  let xDirection = "right";
+  
+  function ballMovement(){
+  
+  //CONTROLS THE HORIZONTAL MOVEMENT OF THE BALL
+   switch(xDirection){
+     case "right":
+     ballAcross += 10;
+     ball.style.left = `${ballAcross}px`;
+     break;
+     case "left":
+     ballAcross -= 10;
+     ball.style.left = `${ballAcross}px`;
+     break;
+   }
+
+   if(xDirection == "right" && ballAcross >= 1525){
+    xDirection = "left";
+   } else if(xDirection == "left" && ballAcross == 15){
+    xDirection = "right";
+   }
+
+  
+  //CONTROLS THE VERTICAL MOVEMENT OF THE BALL
+  switch(yDirection){
+     case "up":
+     ballTop -= 5;
+     ball.style.top = `${ballTop}px`;
+     break;
+     case "down":
+     ballTop += 5;
+     ball.style.top = `${ballTop}px`;
+     break;
+   }
+
+
+   if(yDirection == "up" && ballTop == 10){
+    yDirection = "down";
+    
+   } else if(yDirection == "down" && ballTop == 700){
+    yDirection = "up";
+   }
+
+   
+   //DETECT IF THE BALL HITS ONE OF THE RACKETS
+   let playerPos = left.getBoundingClientRect();
+   let rivalPos  = right.getBoundingClientRect();
+   let ballPos = ball.getBoundingClientRect();
+   let distanceRival = 0;
+   let distancePlayer = 0;
+
+ 
+    if(ballPos.left > 1525){
+      if(ballPos.bottom < rivalPos.top || ballPos.top > rivalPos.bottom){
+        playerScore += 1;
+        player.innerHTML = `${playerScore}`;
+        point.play();
+        crowd.play();
+        clearInterval(ballInterval);
+        ballAcross = 15;
+        ballTop = 350;
+        xDirection = "right";
+        setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
+      } 
+      ballPos.bottom > ((rivalPos.bottom - 50)) ? yDirection = "down" : yDirection = "up";
+      hitAudio.play();
+    }
+    else if(ballPos.left == 23){
+      if(ballPos.bottom < playerPos.top || ballPos.top > playerPos.bottom){
+        rivalScore += 1;
+        rival.innerHTML = `${rivalScore}`;
+        point.play();
+        crowd.play();
+        clearInterval(ballInterval);
+        ballAcross = 15;
+        ballTop = 350;
+        xDirection = "right";
+        setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
+      } 
+      ballPos.bottom > ((playerPos.bottom - 50)) ? yDirection = "down" : yDirection = "up";
+      hitAudio.play();
+     }
+
+    if(playerScore == 6){
+      winner();
+      winMessage = "You Won!";
+      win.innerHTML = `${winMessage}`;
+      setTimeout(function(){ winAudio.play();}, 1000);
+      win.style.display = "block";
+      btn.style.display = "block";
+    } else if(rivalScore == 6){
+      winner();
+      winMessage = "You lost!";
+      win.innerHTML = `${winMessage}`;
+      setTimeout(function(){ loseAudio.play();}, 1000);
+      win.style.display = "block";
+      btn.style.display = "block";
+    }
+   }
+
+   function replay(){
+    location.reload();
+   }
+
+    let ballInterval = setInterval(ballMovement,25);
+    setInterval(rivalMovement,21);
+    btn.addEventListener("click",replay);
+    document.addEventListener("keydown",move);
+
+
+  </script>
+</html>

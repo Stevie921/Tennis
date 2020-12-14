@@ -5,7 +5,11 @@
 	<style>
 		body {
 		  display: flex;
-		  background: #335AAE;
+		  background: repeating-linear-gradient( 180deg,
+  #6FB532,
+  #6FB532 40px,
+  #649E12 40px,
+  #649E12 80px);
 		  position: relative;
       font-family: century gothic;
       color: #222;
@@ -14,15 +18,15 @@
 		.paddle {
 			height: 100px;
 			width: 25px;
-			background: orange;
+			background: #111;
       margin-top: 310px;
+      outline: 2px solid #fff;
 		}
 
-  
     #net {
 			height: 735px;
 			width: 40px;
-			background: #222;
+			background: #fff;
 			margin: 0 auto;
 		}
 
@@ -72,6 +76,8 @@
       margin-left: 688px;
       margin-top: 425px;
       display: none;
+      background: #111;
+      color: #fff;
     }
 
     #line {
@@ -93,6 +99,14 @@
    	 <div id="right" class="paddle"></div>
      <p id="win"></p>
      <button>Replay</button>
+
+
+  <audio id="point" src="sounds/point.wav"></audio>
+  <audio id="hit" src="sounds/hit.wav"></audio>
+  <audio id="crowd" src="sounds/crowd.wav"></audio>
+  <audio id="lose" src="sounds/lose.wav"></audio>
+  <audio id="winaudio" src="sounds/win.wav"></audio>
+
 </body>
 
 
@@ -104,6 +118,11 @@
   let rival = document.getElementById("rival");
   let win = document.getElementById("win");
   let btn = document.querySelector("button");
+  let pointAudio = document.getElementById("point");
+  let hitAudio = document.getElementById("hit");
+  let crowdAudio = document.getElementById("crowd");
+  let loseAudio = document.getElementById("lose");
+  let winAudio = document.getElementById("winaudio");
   let playerScore = 0;
   let rivalScore = 0;
   let winMessage = "";
@@ -197,6 +216,7 @@
 
    if(yDirection == "up" && ballTop == 10){
     yDirection = "down";
+    
    } else if(yDirection == "down" && ballTop == 700){
     yDirection = "up";
    }
@@ -214,6 +234,8 @@
       if(ballPos.bottom < rivalPos.top || ballPos.top > rivalPos.bottom){
         playerScore += 1;
         player.innerHTML = `${playerScore}`;
+        point.play();
+        crowd.play();
         clearInterval(ballInterval);
         ballAcross = 15;
         ballTop = 350;
@@ -221,11 +243,14 @@
         setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
       } 
       ballPos.bottom > ((rivalPos.bottom - 50)) ? yDirection = "down" : yDirection = "up";
+      hitAudio.play();
     }
     else if(ballPos.left == 23){
       if(ballPos.bottom < playerPos.top || ballPos.top > playerPos.bottom){
         rivalScore += 1;
         rival.innerHTML = `${rivalScore}`;
+        point.play();
+        crowd.play();
         clearInterval(ballInterval);
         ballAcross = 15;
         ballTop = 350;
@@ -233,18 +258,21 @@
         setTimeout(function(){ ballInterval = setInterval(ballMovement,25) }, 500);
       } 
       ballPos.bottom > ((playerPos.bottom - 50)) ? yDirection = "down" : yDirection = "up";
+      hitAudio.play();
      }
 
-    if(playerScore == 11){
+    if(playerScore == 6){
       winner();
       winMessage = "You Won!";
       win.innerHTML = `${winMessage}`;
+      setTimeout(function(){ winAudio.play();}, 1000);
       win.style.display = "block";
       btn.style.display = "block";
-    } else if(rivalScore == 11){
+    } else if(rivalScore == 6){
       winner();
       winMessage = "You lost!";
       win.innerHTML = `${winMessage}`;
+      setTimeout(function(){ loseAudio.play();}, 1000);
       win.style.display = "block";
       btn.style.display = "block";
     }
